@@ -5,13 +5,16 @@ on:
     branches:
       - main
 
+permissions:
+    contents: write
+
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Install Dependencies
       run: npm install
@@ -20,8 +23,8 @@ jobs:
       run: npm run build
 
     - name: Deploy to GitHub Pages
-      uses: JamesIves/github-pages-deploy-action@releases/v3
+      uses: JamesIves/github-pages-deploy-action@v4
       with:
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-        BRANCH: main
-        FOLDER: build
+        branch: main
+        folder: build
