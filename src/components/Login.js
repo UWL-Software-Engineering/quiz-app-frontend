@@ -70,7 +70,7 @@ export default function Login() {
     }
     const barearToken = localStorage.getItem("Mytoken");
     return (
-        
+
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
             <div className="-space-y-px">
                 {
