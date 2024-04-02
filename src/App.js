@@ -7,17 +7,19 @@ import {
 } from "react-router-dom";
 import SignupPage from './pages/signup'
 import LoginPage from './pages/login';
+import HomePage from './pages/home';
+import Quiz from './pages/quiz'
 function App() {
   return (
-    <div className="min-h-full h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-    <div className="max-w-md w-full space-y-8">
+    <div> 
      <BrowserRouter>
         <Routes>
             <Route path="/" element={<LoginPage/>} />
             <Route path="/signup" element={<SignupPage/>} />
+            <Route path="/home" element={<HomePage/>} />
+            <Route path="/quiz-page" element={<Quiz/>} />
         </Routes>
       </BrowserRouter>
-    </div>
   </div>
   );
 }
