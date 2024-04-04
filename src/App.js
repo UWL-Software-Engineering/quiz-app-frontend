@@ -1,9 +1,8 @@
-
 import './App.css';
 import {
-  BrowserRouter,
-  Routes,
-  Route,
+    BrowserRouter,
+    Routes,
+    Route,
 } from "react-router-dom";
 import SignupPage from './pages/signup'
 import LoginPage from './pages/login';
