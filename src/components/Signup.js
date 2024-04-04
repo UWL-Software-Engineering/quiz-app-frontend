@@ -19,42 +19,42 @@ export default function Signup(){
         createAccount()
     }
 
-    //handle Signup API Integration here
-    const createAccount=()=>{
-        // API endpoint where you want to send the form data
-        const apiUrl = 'https://example.com/login';
+  //handle Signup API Integration here
+  const createAccount=()=>{
+    // API endpoint where you want to send the form data
+    const apiUrl = 'https://example.com/login';
 
-        // Serialize the form data
-        const formData = {
-            email: signupState['email-address'],
-            password: signupState['password'],
-            username: signupState['username'],
-            confirmPassword: signupState['confirm-password'],
-            // Add other fields as needed
-        };
-        // Make a POST request to the API endpoint
-        fetch(apiUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
+    // Serialize the form data
+    const formData = {
+        email: signupState['email-address'],
+        password: signupState['password'],
+        username: signupState['username'],
+        confirmPassword: signupState['confirm-password'],
+        // Add other fields as needed
+    };
+    // Make a POST request to the API endpoint
+    fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            localStorage.setItem("stringify", JSON.stringify(response));
+            localStorage.setItem("Mytoken", response.data.token);
+            return response.json();
         })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                localStorage.setItem("stringify", JSON.stringify(response));
-                localStorage.setItem("Mytoken", response.data.token);
-                return response.json();
-            })
-            .then(data => {
-                console.log('Authentication successful:', data);
-            })
-            .catch(error => {
-                console.error('Error during authentication:', error);
-            });
-    }
+        .then(data => {
+            console.log('Authentication successful:', data);
+        })
+        .catch(error => {
+            console.error('Error during authentication:', error);
+        });
+  }
 
     return(
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
