@@ -7,7 +7,7 @@ export default function Welcome({ type = 'Button', action = 'start' }) {
     <div className="flex flex-col items-center justify-center h-full p-10">
       <img src={quizImage} alt="Quiz" />
       <h5 className="text-4xl font-bold mt-10">Test your knowledge with our technical questions!</h5>
-      <Link to="/quiz-page" className="mt-10 p-2 w-32 text-center text-white bg-teal-500 rounded-lg font-bold text-2xl">
+      <Link to="/quiz-page" className="mt-10 p-2 text-center text-white bg-teal-500 rounded-lg font-bold text-2xl">
         Start Quiz
       </Link>
     </div>

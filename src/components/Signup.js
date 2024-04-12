@@ -2,65 +2,69 @@ import { useState } from 'react';
 import { signupFields } from "../constants/formFields"
 import FormAction from "./FormAction";
 import Input from "./Input";
+import { useNavigate } from 'react-router-dom';
 
-const fields=signupFields;
-let fieldsState={};
+const fields = signupFields;
+let fieldsState = {};
+const api = process.env.REACT_APP_API_BASE_URL + '/signup';
+fields.forEach(field => fieldsState[field.id] = '');
 
-fields.forEach(field => fieldsState[field.id]='');
+export default function Signup() {
+    const navigate = useNavigate();
+    const [signupState, setSignupState] = useState(fieldsState);
+    const [errorMessage, setErrorMessage] = useState('')
+    const handleChange = (e) => setSignupState({ ...signupState, [e.target.id]: e.target.value });
 
-export default function Signup(){
-    const [signupState,setSignupState]=useState(fieldsState);
-
-    const handleChange=(e)=>setSignupState({...signupState,[e.target.id]:e.target.value});
-
-    const handleSubmit=(e)=>{
+    const handleSubmit = (e) => {
         e.preventDefault();
         console.log(signupState)
         createAccount()
     }
 
-  //handle Signup API Integration here
-  const createAccount=()=>{
-    // API endpoint where you want to send the form data
-    const apiUrl = 'https://example.com/login';
+    //handle Signup API Integration here
+    const createAccount = () => {
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        headers.append('Accept', 'application/json');
+        headers.append('Origin', 'http://localhost:3000');
+        if (signupState['password'] === signupState['confirm-password']) {
+            const formData = {
+                password: signupState['password'],
+                username: signupState['email-address'],
+            };
+            fetch(api, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    navigate("/login");
+                    localStorage.setItem("stringify", JSON.stringify(response));
+                    localStorage.setItem("Mytoken", response.data.token);
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Authentication successful:', data);
+                })
+                .catch(error => {
+                    console.error('Error during authentication:', error);
+                });
+        } else {
+            setErrorMessage("Passwords do not match");
+        }
 
-    // Serialize the form data
-    const formData = {
-        email: signupState['email-address'],
-        password: signupState['password'],
-        username: signupState['username'],
-        confirmPassword: signupState['confirm-password'],
-        // Add other fields as needed
-    };
-    // Make a POST request to the API endpoint
-    fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            localStorage.setItem("stringify", JSON.stringify(response));
-            localStorage.setItem("Mytoken", response.data.token);
-            return response.json();
-        })
-        .then(data => {
-            console.log('Authentication successful:', data);
-        })
-        .catch(error => {
-            console.error('Error during authentication:', error);
-        });
-  }
+    }
 
-    return(
+    return (
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
             <div className="">
                 {
-                    fields.map(field=>
+                    fields.map(field =>
                         <Input
                             key={field.id}
                             handleChange={handleChange}
@@ -78,9 +82,7 @@ export default function Signup(){
                 }
                 <FormAction handleSubmit={handleSubmit} text="Signup" />
             </div>
-
-
-
+            <div className='text-red-500 text-lg font-bold text-center'>{errorMessage}</div>
         </form>
     )
 }
