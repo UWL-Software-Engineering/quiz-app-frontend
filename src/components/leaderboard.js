@@ -14,10 +14,9 @@ headers.append('Content-Type', 'application/json');
 headers.append('Accept', 'application/json');
 headers.append('Origin', 'http://localhost:3000');
 
-// Assuming api variable holds the endpoint for fetching the leaderboard
 fetch(api, {
-  method: 'GET', // Use GET method for fetching leaderboard data
-  headers: headers, // Pass the headers
+  method: 'GET', 
+  headers: headers,
 })
   .then(response => {
     if (!response.ok) {
@@ -29,6 +28,8 @@ fetch(api, {
   })
   .then(data => {
     console.log('Leaderboard data:', data);
+    setLeaderboard(data.leaderboard)
+    setLoading(false)
     // Handle the fetched leaderboard data here
   })
   .catch(error => {
@@ -51,12 +52,12 @@ fetch(api, {
               <th className="border border-gray-400 px-4 py-2">Score</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className='text-center'>
             {leaderboard.map((entry, index) => (
               <tr key={index}>
                 <td className="border border-gray-400 px-4 py-2">{index + 1}</td>
-                <td className="border border-gray-400 px-4 py-2">{entry.name}</td>
-                <td className="border border-gray-400 px-4 py-2">{entry.score}</td>
+                <td className="border border-gray-400 px-4 py-2">{entry.participant_name}</td>
+                <td className="border border-gray-400 px-4 py-2">{entry.best_score}</td>
               </tr>
             ))}
           </tbody>
