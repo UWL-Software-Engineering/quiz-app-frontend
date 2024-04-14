@@ -1,6 +1,6 @@
 import './App.css';
 import {
-    BrowserRouter,
+  BrowserRouter as Router,
     Routes,
     Route,
 } from "react-router-dom";
@@ -12,7 +12,7 @@ import LeaderboardUI from './pages/leaderboardui';
 function App() {
   return (
     <div> 
-     <BrowserRouter>
+     <Router >
         <Routes>
             <Route path="/" element={<LoginPage/>} />
             <Route path="/login" element={<LoginPage/>} />
@@ -21,7 +21,7 @@ function App() {
             <Route path="/quiz-page" element={<Quiz/>} />
             <Route path="/leaderboard" element={<LeaderboardUI/>} />
         </Routes>
-      </BrowserRouter>
+      </Router >
   </div>
   );
 }
