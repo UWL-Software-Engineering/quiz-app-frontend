@@ -3,14 +3,17 @@ import { loginFields } from "../constants/formFields";
 import FormAction from "./FormAction";
 import FormExtra from "./FormExtra";
 import Input from "./Input";
-import { Route } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 const fields = loginFields;
 let fieldsState = {};
 fields.forEach(field => fieldsState[field.id] = '');
-
+const api = process.env.REACT_APP_API_BASE_URL + '/login';
 export default function Login() {
+    const navigate = useNavigate();
     const [loginState, setLoginState] = useState(fieldsState);
     const [errors, setErrors] = useState({});
+    const [errorMessage, setErrorMessage] = useState('')
+    const [authError, setAuthError] = useState('')
     const handleChange = (e) => {
         setLoginState({ ...loginState, [e.target.id]: e.target.value })
         setErrors({ ...errors, [e.target.id]: '' });
@@ -34,41 +37,40 @@ export default function Login() {
         });
         return validationErrors;
     }
-    //Handle Login API Integration here
     const authenticateUser = () => {
-        // API endpoint where you want to send the form data
-        const apiUrl = 'https://example.com/login';
-
-        // Serialize the form data
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        headers.append('Accept', 'application/json');
+        headers.append('Origin','http://localhost:3000');
         const formData = {
-            email: loginState['email-address'],
+            username: loginState['email-address'],
             password: loginState['password']
-            // Add other fields as needed
         };
-        // Make a POST request to the API endpoint
-        fetch(apiUrl, {
+        fetch(api, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(formData)
         })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                localStorage.setItem("stringify", JSON.stringify(response));
-                localStorage.setItem("Mytoken", response.data.token);
-                return response.json();
-            })
-            .then(data => {
-                console.log('Authentication successful:', data);
-            })
-            .catch(error => {
-                console.error('Error during authentication:', error);
-            });
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(data => {
+                    throw new Error(data.error);
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            localStorage.setItem("Mytoken", data.token);
+            navigate("/home");
+            console.log('Authentication successful:', data);
+        })
+        .catch(error => {
+            console.error('Error during authentication:', error);
+            setErrorMessage(error.message);
+        });
     }
-    const barearToken = localStorage.getItem("Mytoken");
     return (
         
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
@@ -88,22 +90,14 @@ export default function Login() {
                                 placeholder={field.placeholder}
                             />
                             {errors[field.id] && <p className="text-red-500">{errors[field.id]}</p>}
+                            <p className="text-red-500">{authError}</p>
                         </div>
                     )
                 }
             </div>
-
             <FormExtra />
             <FormAction handleSubmit={handleSubmit} text="Login" />
-            {/* <Route
-                render={() => {
-                    return barearToken ? (
-                        <Redirect to="/dashboard" />
-                    ) : (
-                        <Redirect to="/login" />
-                    );
-                }}
-            /> */}
+            <div className='text-red-500 text-lg font-bold text-center'>{errorMessage}</div>
         </form>
     )
 }
