@@ -8,6 +8,7 @@ import SignupPage from './pages/signup'
 import LoginPage from './pages/login';
 import HomePage from './pages/home';
 import Quiz from './pages/quiz'
+import LeaderboardUI from './pages/leaderboardui';
 function App() {
   return (
     <div> 
@@ -18,6 +19,7 @@ function App() {
             <Route path="/signup" element={<SignupPage/>} />
             <Route path="/home" element={<HomePage/>} />
             <Route path="/quiz-page" element={<Quiz/>} />
+            <Route path="/leaderboard" element={<LeaderboardUI/>} />
         </Routes>
       </BrowserRouter>
   </div>
