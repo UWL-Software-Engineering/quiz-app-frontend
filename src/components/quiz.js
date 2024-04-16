@@ -26,11 +26,11 @@ const Quiz = () => {
   };
 
   const handleOptionSelect = (option) => {
-    setSelectedOption(option);
+    const optionLetter = option.split('.')[0].trim();
+  setSelectedOption(optionLetter);
   };
 
   const handleSubmit = () => {
-    console.log("9999999999")
     // Check if the user has selected an option
     if (!selectedOption) {
       return;
@@ -46,8 +46,8 @@ const Quiz = () => {
     setSelectedOption('');
     if (currentQuestion === questions.length - 1) {
       // If it's the last question, finish the quiz
-      console.log('Quiz completed. Score:', score + 1); // Log the final score
       setShowResults(true);
+      console.log('Quiz completed. Score:', score + 1); // Log the final score
       return;
     }
     setCurrentQuestion(currentQuestion + 1);
@@ -63,8 +63,8 @@ const Quiz = () => {
       <div className="flex justify-center items-center h-screen">
         <div className="max-w-md bg-teal-600 mx-auto bg-white shadow-md rounded-lg overflow-hidden">
           <div className="text-center p-8">
-            <h1 className="text-4xl font-bold text-white">Quiz Results</h1>
-            <p className="text-2xl mt-4 text-white">Your score: {score}/{questions.length}</p>
+            <h1 className="text-4xl font-bold">Quiz Results</h1>
+            <p className="text-2xl mt-4">Your score: {score}/{questions.length}</p>
           </div>
         </div>
       </div>
@@ -81,7 +81,7 @@ const Quiz = () => {
         {questions[currentQuestion].options.map((option, index) => (
           <button
             key={index}
-            className={`p-4 bg-blue-500 text-white rounded-md ${selectedOption === option ? 'bg-blue-600' : ''}`}
+            className={`p-4 rounded-md ${selectedOption === option.split('.')[0].trim() ? 'bg-blue-600 text-white' : 'bg-blue-500 text-white'}`}
             onClick={() => handleOptionSelect(option)}
           >
             {option}
